@@ -13,6 +13,15 @@ const problems = [
   { id: "c", difficulty: "Hard", topics: ["Graph"] },
 ];
 
+const report = (problemId, at, decision) => ({
+  problemId,
+  at,
+  report: {
+    decision,
+    topics: problems.find((problem) => problem.id === problemId)?.topics ?? [],
+  },
+});
+
 test("topics are unique and sorted", () => {
   assert.deepEqual(availableTopics(problems), [
     "Array",
@@ -34,13 +43,13 @@ test("difficulty and topic filters combine", () => {
 
 test("recent performance summarizes assessed reports newest first", () => {
   const reports = [
-    { problemId: "a", at: 10, report: { decision: "NO_HIRE" } },
-    { problemId: "b", at: 30, report: { decision: "HIRE" } },
-    { problemId: "a", at: 20, report: { decision: "NO_HIRE" } },
-    { problemId: "c", at: 40, report: { decision: "HIRE" } },
+    report("a", 10, "NO_HIRE"),
+    report("b", 30, "HIRE"),
+    report("a", 20, "NO_HIRE"),
+    report("c", 40, "HIRE"),
   ];
 
-  assert.deepEqual(recentPerformance(problems, reports, 3), {
+  assert.deepEqual(recentPerformance(reports, 3), {
     attempts: 3,
     passes: 2,
     misses: 1,
@@ -53,7 +62,7 @@ test("recent performance summarizes assessed reports newest first", () => {
 
 test("recent performance ignores unscored and undated entries", () => {
   assert.equal(
-    recentPerformance(problems, [
+    recentPerformance([
       { problemId: "a", at: null, report: { decision: "NO_HIRE" } },
       { problemId: "b", at: 20, report: { decision: "PENDING" } },
     ]),
@@ -61,11 +70,24 @@ test("recent performance ignores unscored and undated entries", () => {
   );
 });
 
+test("recent performance ignores incomplete reports with a decision", () => {
+  assert.equal(
+    recentPerformance([
+      {
+        problemId: "a",
+        at: 20,
+        report: { incomplete: true, decision: "HIRE", topics: ["Array"] },
+      },
+    ]),
+    null,
+  );
+});
+
 test("topics with more misses than passes are highlighted", () => {
-  const snapshot = recentPerformance(problems, [
-    { problemId: "a", at: 30, report: { decision: "NO_HIRE" } },
-    { problemId: "a", at: 20, report: { decision: "NO_HIRE" } },
-    { problemId: "b", at: 10, report: { decision: "HIRE" } },
+  const snapshot = recentPerformance([
+    report("a", 30, "NO_HIRE"),
+    report("a", 20, "NO_HIRE"),
+    report("b", 10, "HIRE"),
   ]);
 
   assert.deepEqual(snapshot.weakTopics, ["Hash Table", "Array"]);

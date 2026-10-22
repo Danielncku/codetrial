@@ -483,6 +483,7 @@ fn prompt_samples() -> Value {
             evidence: &working_report,
             behavioral_round: BehavioralRound::Opened,
             follow_ups_released: true,
+            candidate_turns: 1,
         }),
         "boardReport": report_prompt(ReportPromptInput {
             problem,
@@ -502,6 +503,7 @@ fn prompt_samples() -> Value {
             evidence: "",
             behavioral_round: BehavioralRound::NotConfigured,
             follow_ups_released: false,
+            candidate_turns: 1,
         }),
         "boardReportNoBoard": report_prompt(ReportPromptInput {
             problem,
@@ -521,6 +523,7 @@ fn prompt_samples() -> Value {
             evidence: "",
             behavioral_round: BehavioralRound::NotConfigured,
             follow_ups_released: false,
+            candidate_turns: 1,
         }),
         "reportEmpty": report_prompt(ReportPromptInput {
             problem,
@@ -540,6 +543,7 @@ fn prompt_samples() -> Value {
             evidence: "",
             behavioral_round: BehavioralRound::NeverOpened,
             follow_ups_released: false,
+            candidate_turns: 0,
         }),
         "reportHalfElapsed": report_prompt(ReportPromptInput {
             problem,
@@ -559,6 +563,7 @@ fn prompt_samples() -> Value {
             evidence: "",
             behavioral_round: BehavioralRound::NotConfigured,
             follow_ups_released: false,
+            candidate_turns: 0,
         }),
 
         // Assembled by the real builder rather than written out here. A
@@ -598,6 +603,7 @@ fn prompt_samples() -> Value {
             evidence: "",
             behavioral_round: BehavioralRound::Opened,
             follow_ups_released: false,
+            candidate_turns: 1,
         }),
         "reportMultiline": report_prompt(ReportPromptInput {
             problem,
@@ -617,6 +623,7 @@ fn prompt_samples() -> Value {
             evidence: "",
             behavioral_round: BehavioralRound::Opened,
             follow_ups_released: false,
+            candidate_turns: 1,
         }),
     });
 
@@ -999,6 +1006,7 @@ fn evaluation_reaction(case: &Value, state: &mut RuntimeState) -> String {
             evidence: "",
             behavioral_round: BehavioralRound::of(state),
             follow_ups_released: false,
+            candidate_turns: state.evidence_ledger.conversation.candidate_turns,
         })),
         other => panic!("unknown reaction kind {other}"),
     }

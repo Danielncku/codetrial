@@ -240,7 +240,7 @@ fn prompt_golden_digest_matches_versions() {
     // the failure worth catching is a version bumped with the golden left
     // alone, which a digest comparison on its own reads as fine.
     let recorded_versions = (30, 24);
-    let recorded_digest = "35804f665300ffc6f4c2a0a79612cd75ca285f86952dac414d5c7336ce4dde70";
+    let recorded_digest = "17021257f26ec5307d2c4753476db6326244bf7c4484797f2b64ee0ad34a3ec1";
 
     assert_eq!(
         (LIVE_PROMPT_VERSION, REPORT_PROMPT_VERSION),
@@ -563,7 +563,15 @@ fn silent_report_brief_makes_communication_unassessed() {
         "{prompt}"
     );
     assert!(
-        prompt.contains("Code edits and test runs are not spoken responses"),
+        prompt.contains("Code edits, typed code comments, and test runs are not spoken responses"),
+        "{prompt}"
+    );
+    assert!(
+        prompt.contains("Missing communication evidence is neither positive nor negative"),
+        "{prompt}"
+    );
+    assert!(
+        prompt.contains("do not change it only because communication was unassessed"),
         "{prompt}"
     );
 }
